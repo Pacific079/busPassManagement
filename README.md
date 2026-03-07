@@ -1,10 +1,10 @@
-# 🚌 Online Bus Pass Management System (MERN Stack)
+#  Online Bus Pass Management System (MERN Stack)
 
 A full-stack web application for managing bus passes digitally — built with MongoDB, Express.js, React, and Node.js.
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 - Node.js v18+
@@ -31,7 +31,7 @@ npm start                   # Starts on http://localhost:3000
 
 ---
 
-## 🔐 Demo Login
+##  Demo Login
 
 | Role  | Email                | Password   |
 |-------|----------------------|------------|
@@ -40,7 +40,7 @@ npm start                   # Starts on http://localhost:3000
 
 ---
 
-## 🏗️ Project Structure
+##  Project Structure
 
 ```
 bus-pass-system/
@@ -69,34 +69,34 @@ bus-pass-system/
 
 ---
 
-## ✨ Features
+##  Features
 
 ### User Module
-- ✅ Register & Login (JWT auth)
-- ✅ Apply for bus pass (multi-step form)
-- ✅ Upload required documents
-- ✅ Track application status (Pending / Approved / Rejected)
-- ✅ View digital pass with QR code
-- ✅ Renew existing pass
-- ✅ Online payment (mock)
-- ✅ Profile management
+-  Register & Login (JWT auth)
+-  Apply for bus pass (multi-step form)
+-  Upload required documents
+-  Track application status (Pending / Approved / Rejected)
+-  View digital pass with QR code
+-  Renew existing pass
+-  Online payment (mock)
+-  Profile management
 
 ### Admin Module
-- ✅ Admin dashboard with stats & charts
-- ✅ Review, approve, reject applications
-- ✅ Email notifications on approval/rejection
-- ✅ Manage routes (CRUD)
-- ✅ Manage pass categories (CRUD)
-- ✅ Payment records
-- ✅ User management
+-  Admin dashboard with stats & charts
+-  Review, approve, reject applications
+-  Email notifications on approval/rejection
+-  Manage routes (CRUD)
+-  Manage pass categories (CRUD)
+-  Payment records
+-  User management
 
 ### Verification
-- ✅ QR code auto-generated on approval
-- ✅ Public API: `GET /api/pass/verify/:passNumber`
+-  QR code auto-generated on approval
+-  Public API: `GET /api/pass/verify/:passNumber`
 
 ---
 
-## 🛡️ Security
+##  Security
 - JWT authentication + role-based authorization
 - bcrypt password hashing (rounds: 12)
 - Helmet.js HTTP security headers
@@ -106,7 +106,7 @@ bus-pass-system/
 
 ---
 
-## 📡 API Endpoints
+##  API Endpoints
 
 | Method | Endpoint | Access |
 |--------|----------|--------|
@@ -127,7 +127,7 @@ bus-pass-system/
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 **Backend**: Node.js, Express.js, MongoDB, Mongoose, JWT, bcrypt, Multer, QRCode, Nodemailer  
 **Frontend**: React 18, React Router v6, Axios, React Toastify, React QR Code, Recharts  
