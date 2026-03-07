@@ -10,10 +10,20 @@ const app = express();
 
 // ── Security Middleware ──────────────────────────────────────
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
-  credentials: true,
+  origin: [
+    "http://localhost:3000",
+    "https://bus-pass-management-khaki.vercel.app"
+  ],
+  credentials: true
 }));
+
+
+// app.use(cors({
+//   origin: process.env.CLIENT_URL || 'http://localhost:3000',
+//   credentials: true,
+// }));
 
 // ── Rate Limiting ────────────────────────────────────────────
 const apiLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: { success: false, message: 'Too many requests. Try again later.' } });
