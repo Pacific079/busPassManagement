@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
-import { BusIcon, LockIcon, EyeIcon, EyeOffIcon } from '../../components/common/Icons';
+import { BusIcon, EyeIcon, EyeOffIcon } from '../../components/common/Icons';
 
 const LoginPage = () => {
-  const { login, isAdmin } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname;

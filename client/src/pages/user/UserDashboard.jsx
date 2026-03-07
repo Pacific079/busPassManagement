@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getMyPasses } from '../../api/pass.api';
-import { BusIcon, CheckIcon, AddIcon, UserIcon, RefreshIcon, DashboardIcon } from '../../components/common/Icons';
+import { BusIcon, CheckIcon, AddIcon, UserIcon, RefreshIcon } from '../../components/common/Icons';
 import { useAuth } from '../../context/AuthContext';
 
 import StatusBadge from '../../components/common/StatusBadge';

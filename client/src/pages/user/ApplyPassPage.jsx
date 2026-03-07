@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCategories, getRoutes, applyPass } from '../../api/pass.api';
 import { toast } from 'react-toastify';
@@ -56,7 +56,7 @@ const ApplyPassPage = () => {
         if (file) fd.append(key, file);
       });
 
-      const result = await applyPass(fd);
+      await applyPass(fd);
       toast.success('Pass application submitted successfully!');
       navigate('/my-passes');
     } catch (err) {

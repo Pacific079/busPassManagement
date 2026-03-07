@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
@@ -33,7 +33,7 @@ const RegisterPage = () => {
     setLoading(true);
     try {
       const { confirmPassword, ...submitData } = form;
-      const user = await register(submitData);
+      await register(submitData);
       toast.success('Registration successful! Welcome aboard!');
       navigate('/dashboard');
     } catch (err) {

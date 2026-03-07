@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import QRCode from 'react-qr-code';
 import { getMyPasses, renewPass, getPassById } from '../../api/pass.api';
 import StatusBadge from '../../components/common/StatusBadge';
 import { BusIcon } from '../../components/common/Icons';
 import { toast } from 'react-toastify';
-import { format, isPast, differenceInDays } from 'date-fns';
+import { format, differenceInDays } from 'date-fns';
 
 const MyPassesPage = () => {
   const [data, setData]         = useState({ passes: [], pagination: {} });
