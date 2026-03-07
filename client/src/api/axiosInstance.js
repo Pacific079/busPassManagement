@@ -2,7 +2,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const axiosInstance = axios.create({
-  baseURL: '/api',
+  baseURL: 'https://buspassmanagement.onrender.com/api',
   timeout: 15000,
   headers: { 'Content-Type': 'application/json' },
 });
