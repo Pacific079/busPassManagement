@@ -78,5 +78,3 @@ export const DashboardIcon = ({ size = 20 }) => (
     <rect x="14" y="14" width="7" height="7" stroke="currentColor" strokeWidth="1.8" />
   </svg>
 );
-
-export default null;

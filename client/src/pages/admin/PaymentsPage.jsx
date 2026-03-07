@@ -19,7 +19,7 @@ const PaymentsPage = () => {
   }, [status, page]);
 
   const payments = data.payments || [];
-  const { total, pages } = data.pagination || {};
+  const { pages } = data.pagination || {};
   const totalAmount = payments.filter(p => p.status === 'Success').reduce((sum, p) => sum + p.amount, 0);
 
   return (
