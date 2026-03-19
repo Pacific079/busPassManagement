@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { getAdminCategories, createCategory, updateCategory, deleteCategory } from '../../api/admin.api';
 import { toast } from 'react-toastify';
 
@@ -12,6 +12,7 @@ const CategoriesPage = () => {
   const [modal, setModal]     = useState(null);
   const [form, setForm]       = useState(BLANK);
   const [saving, setSaving]   = useState(false);
+  const [query, setQuery]     = useState('');
 
   const load = () => {
     setLoading(true);
@@ -54,16 +55,36 @@ const CategoriesPage = () => {
     catch { toast.error('Failed.'); }
   };
 
+  const filteredCats = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return cats;
+    return cats.filter(c => {
+      const docs = (c.requiredDocuments || []).join(' ');
+      return `${c.name || ''} ${c.description || ''} ${docs}`.toLowerCase().includes(q);
+    });
+  }, [cats, query]);
+
   return (
     <div className="page-container">
       <div className="page-header">
         <h1 className="page-title">Pass Categories</h1>
-        <button className="btn-primary" onClick={openAdd}>Add Category</button>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+          <input
+            className="form-input"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search categories…"
+            style={{ width: 260 }}
+          />
+          <button className="btn-primary" onClick={openAdd}>Add Category</button>
+        </div>
       </div>
 
       {loading ? <div className="loading-text">Loading...</div> : (
         <div className="category-admin-grid">
-          {cats.map(cat => (
+          {filteredCats.length === 0 ? (
+            <div className="empty-state-sm">No categories found.</div>
+          ) : filteredCats.map(cat => (
             <div key={cat._id} className="category-admin-card">
               <div className="cat-header">
                 <h3>{cat.name}</h3>

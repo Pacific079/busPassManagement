@@ -6,6 +6,7 @@ import StatusBadge from '../../components/common/StatusBadge';
 import { BusIcon } from '../../components/common/Icons';
 import { toast } from 'react-toastify';
 import { format, differenceInDays } from 'date-fns';
+import { downloadPassPDF } from '../../utils/downloadPass';
 
 const MyPassesPage = () => {
   const [data, setData]         = useState({ passes: [], pagination: {} });
@@ -13,6 +14,7 @@ const MyPassesPage = () => {
   const [statusFilter, setFilter] = useState('');
   const [selectedPass, setSelected] = useState(null);
   const [renewing, setRenewing] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   const loadPasses = (status = '') => {
     setLoading(true);
@@ -51,6 +53,19 @@ const MyPassesPage = () => {
       toast.error(err.response?.data?.message || 'Renewal failed.');
     } finally {
       setRenewing(false);
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!selectedPass) return;
+    setDownloading(true);
+    try {
+      await downloadPassPDF(selectedPass);
+      toast.success('Pass downloaded successfully!');
+    } catch (err) {
+      toast.error(err.message || 'Failed to download pass.');
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -168,6 +183,9 @@ const MyPassesPage = () => {
                   {renewing ? 'Processing...' : 'Renew Pass'}
                 </button>
               )}
+              <button className="btn-primary" onClick={handleDownload} disabled={downloading}>
+                {downloading ? 'Downloading...' : '⬇️ Download Pass'}
+              </button>
               <button className="btn-ghost" onClick={() => { setSelected(null); navigate('/my-passes'); }}>Close</button>
             </div>
           </div>

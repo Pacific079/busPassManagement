@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { getAllUsers } from '../../api/admin.api';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
@@ -7,6 +7,7 @@ const UsersPage = () => {
   const [data, setData]       = useState({ users: [], pagination: {} });
   const [loading, setLoading] = useState(true);
   const [page, setPage]       = useState(1);
+  const [query, setQuery]     = useState('');
 
   useEffect(() => {
     setLoading(true);
@@ -18,12 +19,32 @@ const UsersPage = () => {
 
   const users = data.users || [];
   const { total, pages } = data.pagination || {};
+  const filteredUsers = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return users;
+    return users.filter(u => {
+      const city = u.address?.city || '';
+      const state = u.address?.state || '';
+      const status = u.isActive ? 'active' : 'inactive';
+      const hay = `${u.name || ''} ${u.email || ''} ${u.phone || ''} ${city} ${state} ${status}`.toLowerCase();
+      return hay.includes(q);
+    });
+  }, [query, users]);
 
   return (
     <div className="page-container">
       <div className="page-header">
         <h1 className="page-title">Registered Users</h1>
-        <span className="total-count">{total} total users</span>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+          <input
+            className="form-input"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search users…"
+            style={{ width: 260 }}
+          />
+          <span className="total-count">{total} total users</span>
+        </div>
       </div>
 
       {loading ? <div className="loading-text">Loading...</div> : (
@@ -34,7 +55,9 @@ const UsersPage = () => {
                 <tr><th>#</th><th>Name</th><th>Contact</th><th>Address</th><th>Status</th><th>Joined</th></tr>
               </thead>
               <tbody>
-                {users.map((u, i) => (
+                {filteredUsers.length === 0 ? (
+                  <tr><td colSpan={6} style={{ textAlign: 'center', padding: 40, color: '#94a3b8' }}>No users found.</td></tr>
+                ) : filteredUsers.map((u, i) => (
                   <tr key={u._id}>
                     <td style={{ color: '#94a3b8' }}>{(page - 1) * 15 + i + 1}</td>
                     <td>

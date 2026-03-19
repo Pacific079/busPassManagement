@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { getAllPayments } from '../../api/admin.api';
 import StatusBadge from '../../components/common/StatusBadge';
 import { toast } from 'react-toastify';
@@ -9,6 +9,7 @@ const PaymentsPage = () => {
   const [loading, setLoading] = useState(true);
   const [status, setStatus]   = useState('');
   const [page, setPage]       = useState(1);
+  const [query, setQuery]     = useState('');
 
   useEffect(() => {
     setLoading(true);
@@ -20,7 +21,24 @@ const PaymentsPage = () => {
 
   const payments = data.payments || [];
   const { pages } = data.pagination || {};
-  const totalAmount = payments.filter(p => p.status === 'Success').reduce((sum, p) => sum + p.amount, 0);
+  const filteredPayments = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return payments;
+    return payments.filter(p => {
+      const user = p.user || {};
+      const pass = p.pass || {};
+      const hay = [
+        p.transactionId,
+        user.name, user.email,
+        pass.passNumber,
+        p.method,
+        p.status,
+      ].filter(Boolean).join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }, [payments, query]);
+
+  const totalAmount = filteredPayments.filter(p => p.status === 'Success').reduce((sum, p) => sum + (p.amount || 0), 0);
 
   return (
     <div className="page-container">
@@ -28,7 +46,7 @@ const PaymentsPage = () => {
 
       <div className="summary-bar">
         <div className="summary-bar-item">
-          <span>Total on page</span><strong>{payments.length} records</strong>
+          <span>Total on page</span><strong>{filteredPayments.length} records</strong>
         </div>
         <div className="summary-bar-item">
           <span>Successful amount</span><strong style={{ color: '#059669' }}>₹{totalAmount.toLocaleString('en-IN')}</strong>
@@ -44,6 +62,16 @@ const PaymentsPage = () => {
         ))}
       </div>
 
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'flex-end' }}>
+        <input
+          className="form-input"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search payments…"
+          style={{ width: 320 }}
+        />
+      </div>
+
       {loading ? <div className="loading-text">Loading payments...</div> : (
         <div className="card">
           <div className="table-container">
@@ -52,9 +80,9 @@ const PaymentsPage = () => {
                 <tr><th>Transaction ID</th><th>User</th><th>Pass</th><th>Amount</th><th>Method</th><th>Status</th><th>Date</th></tr>
               </thead>
               <tbody>
-                {payments.length === 0 ? (
+                {filteredPayments.length === 0 ? (
                   <tr><td colSpan={7} style={{ textAlign: 'center', padding: 40, color: '#94a3b8' }}>No payments found.</td></tr>
-                ) : payments.map(p => (
+                ) : filteredPayments.map(p => (
                   <tr key={p._id}>
                     <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{p.transactionId}</td>
                     <td>

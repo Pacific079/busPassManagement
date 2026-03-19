@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getApplications, approveApplication, rejectApplication } from '../../api/admin.api';
 import StatusBadge from '../../components/common/StatusBadge';
@@ -11,6 +11,7 @@ const ApplicationsPage = () => {
   const [loading, setLoading] = useState(true);
   const [status, setStatus]   = useState(searchParams.get('status') || '');
   const [page, setPage]       = useState(1);
+  const [query, setQuery]     = useState('');
   const [selected, setSelected] = useState(null);
   const [rejectReason, setRejectReason] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
@@ -58,6 +59,24 @@ const ApplicationsPage = () => {
 
   const passes = data.passes || [];
   const { total, pages } = data.pagination || {};
+  const filteredPasses = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return passes;
+    return passes.filter(p => {
+      const user = p.user || {};
+      const cat = p.category || {};
+      const route = p.route || {};
+      const pay = p.payment || {};
+      const hay = [
+        user.name, user.email, user.phone,
+        cat.name,
+        route.routeNumber, route.routeName,
+        p.status,
+        pay.status, pay.transactionId,
+      ].filter(Boolean).join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }, [passes, query]);
 
   return (
     <div className="page-container">
@@ -73,6 +92,16 @@ const ApplicationsPage = () => {
         {total !== undefined && <span className="total-count">{total} total</span>}
       </div>
 
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'flex-end' }}>
+        <input
+          className="form-input"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search applications…"
+          style={{ width: 320 }}
+        />
+      </div>
+
       {loading && <div className="loading-text">Loading...</div>}
 
       {!loading && (
@@ -86,9 +115,9 @@ const ApplicationsPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {passes.length === 0 ? (
+                {filteredPasses.length === 0 ? (
                   <tr><td colSpan={7} style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)' }}>No applications found.</td></tr>
-                ) : passes.map(p => (
+                ) : filteredPasses.map(p => (
                   <tr key={p._id}>
                     <td>
                       <div><strong>{p.user?.name}</strong></div>

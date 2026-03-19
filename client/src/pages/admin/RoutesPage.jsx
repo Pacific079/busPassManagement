@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { getAdminRoutes, createRoute, updateRoute, deleteRoute } from '../../api/admin.api';
 import { toast } from 'react-toastify';
 
@@ -10,6 +10,7 @@ const RoutesPage = () => {
   const [modal, setModal]     = useState(null); 
   const [form, setForm]       = useState(BLANK);
   const [saving, setSaving]   = useState(false);
+  const [query, setQuery]     = useState('');
 
   const load = () => {
     setLoading(true);
@@ -57,11 +58,30 @@ const RoutesPage = () => {
     }
   };
 
+  const filteredRoutes = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return routes;
+    return routes.filter(r => {
+      const stops = (r.stops || []).map(s => s?.name).filter(Boolean).join(' ');
+      const hay = `${r.routeNumber || ''} ${r.routeName || ''} ${r.startPoint || ''} ${r.endPoint || ''} ${stops}`.toLowerCase();
+      return hay.includes(q);
+    });
+  }, [query, routes]);
+
   return (
     <div className="page-container">
       <div className="page-header">
         <h1 className="page-title">Manage Routes</h1>
-        <button className="btn-primary" onClick={openAdd}>Add Route</button>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+          <input
+            className="form-input"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search routes…"
+            style={{ width: 260 }}
+          />
+          <button className="btn-primary" onClick={openAdd}>Add Route</button>
+        </div>
       </div>
 
       {loading ? <div className="loading-text">Loading routes...</div> : (
@@ -72,9 +92,9 @@ const RoutesPage = () => {
                 <tr><th>Route No.</th><th>Name</th><th>From → To</th><th>Distance</th><th>Fare</th><th>Status</th><th>Actions</th></tr>
               </thead>
               <tbody>
-                {routes.length === 0 ? (
+                {filteredRoutes.length === 0 ? (
                   <tr><td colSpan={7} style={{ textAlign: 'center', padding: 40, color: '#94a3b8' }}>No routes found.</td></tr>
-                ) : routes.map(r => (
+                ) : filteredRoutes.map(r => (
                   <tr key={r._id}>
                     <td><strong>{r.routeNumber}</strong></td>
                     <td>{r.routeName}</td>
