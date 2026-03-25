@@ -24,6 +24,7 @@ import RoutesPage        from './pages/admin/RoutesPage';
 import CategoriesPage    from './pages/admin/CategoriesPage';
 import PaymentsPage      from './pages/admin/PaymentsPage';
 import UsersPage         from './pages/admin/UsersPage';
+import ReportPage        from './pages/admin/ReportPage';
 
 import './index.css';
 import { BusIcon } from './components/common/Icons';
@@ -55,6 +56,7 @@ const AppRoutes = () => {
           <Route path="/admin/categories"       element={<ProtectedRoute adminOnly><CategoriesPage /></ProtectedRoute>} />
           <Route path="/admin/payments"         element={<ProtectedRoute adminOnly><PaymentsPage /></ProtectedRoute>} />
           <Route path="/admin/users"            element={<ProtectedRoute adminOnly><UsersPage /></ProtectedRoute>} />
+          <Route path="/admin/report"           element={<ProtectedRoute adminOnly><ReportPage /></ProtectedRoute>} />
 
           {/* 404 */}
           <Route path="*" element={

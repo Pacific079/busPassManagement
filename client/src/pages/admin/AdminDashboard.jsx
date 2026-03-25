@@ -132,6 +132,7 @@ const AdminDashboard = () => {
           { to: '/admin/categories',   icon: <AddIcon />, label: 'Categories',  color: 'var(--accent)' },
           { to: '/admin/payments',     icon: <RefreshIcon />, label: 'Payments',    color: '#F59E0B' },
           { to: '/admin/users',        icon: <UserIcon />, label: 'Users',       color: '#DC2626' },
+          { to: '/admin/report',       icon: <DashboardIcon />, label: 'Report', color: '#7C3AED' },
         ].map(l => (
           <Link key={l.to} to={l.to} className="quick-action-card" style={{ borderTopColor: l.color }}>
             <span className="quick-action-icon" style={{ color: l.color }}>{l.icon}</span>

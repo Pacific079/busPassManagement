@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const {
   getDashboard, getAllApplications, approvePass, rejectPass,
-  getAllPayments, getAllUsers,
+  getAllPayments, getAllUsers, getSystemReport,
 } = require('../controllers/admin.controller');
 const {
   getAllCategoriesAdmin, createCategory, updateCategory, deleteCategory,
@@ -16,6 +16,7 @@ router.use(protect, adminOnly);
 // Dashboard
 router.get('/dashboard',              getDashboard);
 router.get('/users',                  getAllUsers);
+router.get('/report',                 getSystemReport);
 
 // Applications
 router.get('/applications',           getAllApplications);

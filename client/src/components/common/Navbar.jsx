@@ -30,6 +30,7 @@ const Navbar = () => {
     { to: '/admin/categories',       label: 'Categories' },
     { to: '/admin/payments',         label: 'Payments' },
     { to: '/admin/users',            label: 'Users' },
+    { to: '/admin/report',           label: 'Report' },
   ];
 
   const links = isAdmin ? adminLinks : userLinks;

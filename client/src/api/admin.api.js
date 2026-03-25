@@ -6,6 +6,7 @@ export const approveApplication  = (id)     => api.put(`/admin/applications/${id
 export const rejectApplication   = (id, reason) => api.put(`/admin/applications/${id}/reject`, { reason }).then(r => r.data);
 export const getAllPayments       = (params) => api.get('/admin/payments', { params }).then(r => r.data.data);
 export const getAllUsers          = (params) => api.get('/admin/users', { params }).then(r => r.data.data);
+export const getSystemReport      = ()       => api.get('/admin/report').then(r => r.data.data);
 
 
 export const getAdminCategories  = ()       => api.get('/admin/categories').then(r => r.data.data);

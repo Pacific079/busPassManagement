@@ -225,3 +225,52 @@ exports.getAllUsers = async (req, res, next) => {
     next(err);
   }
 };
+
+// @desc   Get full system report data
+// @route  GET /api/admin/report
+// @access Admin
+exports.getSystemReport = async (req, res, next) => {
+  try {
+    const [users, passes, payments, categories, routes] = await Promise.all([
+      User.find({ role: 'user' }).sort({ createdAt: -1 }),
+      Pass.find()
+        .sort({ createdAt: -1 })
+        .populate('user', 'name email phone')
+        .populate('category', 'name price')
+        .populate('route', 'routeNumber routeName')
+        .populate('payment', 'amount status transactionId'),
+      Payment.find()
+        .sort({ createdAt: -1 })
+        .populate('user', 'name email')
+        .populate('pass', 'passNumber status'),
+      Category.find().sort({ createdAt: -1 }),
+      Route.find().sort({ createdAt: -1 }),
+    ]);
+
+    const stats = {
+      users: users.length,
+      passes: passes.length,
+      payments: payments.length,
+      categories: categories.length,
+      routes: routes.length,
+      approvedPasses: passes.filter((p) => p.status === 'Approved').length,
+      pendingPasses: passes.filter((p) => p.status === 'Pending').length,
+      successfulPayments: payments.filter((p) => p.status === 'Success').length,
+      totalRevenue: payments
+        .filter((p) => p.status === 'Success')
+        .reduce((sum, p) => sum + (p.amount || 0), 0),
+    };
+
+    return successResponse(res, 'System report fetched.', {
+      generatedAt: new Date().toISOString(),
+      stats,
+      users,
+      passes,
+      payments,
+      categories,
+      routes,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
